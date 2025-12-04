@@ -1,7 +1,7 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const sql = require('mssql');
-const { query, getPool } = require('../Db/db_connection');
+const { query, getPool } = require('../Db/db_connection.js');
 
 const toSqlTime = (value, label) => {
     if (value === undefined || value === null || value === "") return null;
