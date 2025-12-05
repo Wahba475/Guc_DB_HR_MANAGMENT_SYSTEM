@@ -534,6 +534,56 @@ const deductMissingDays = async (req, res) => {
       });
     }
   };
+  const getHRStats = async (req, res) => {
+    try {
+      const pool = await getPool();
+  
+      const queries = await Promise.all([
+        pool.request().query(`SELECT COUNT(*) AS count FROM Leave L
+                              LEFT JOIN Annual_Leave A ON L.request_ID = A.request_ID
+                              LEFT JOIN Accidental_Leave AC ON L.request_ID = AC.request_ID
+                              WHERE L.final_approval_status = 'Pending'
+                              AND (A.request_ID IS NOT NULL OR AC.request_ID IS NOT NULL)`),
+  
+        pool.request().query(`SELECT COUNT(*) AS count FROM Unpaid_Leave U
+                              JOIN Leave L ON U.request_ID = L.request_ID
+                              WHERE L.final_approval_status = 'Pending'`),
+  
+        pool.request().query(`SELECT COUNT(*) AS count FROM Compensation_Leave C
+                              JOIN Leave L ON C.request_ID = L.request_ID
+                              WHERE L.final_approval_status = 'Pending'`),
+  
+        pool.request().query(`SELECT COUNT(*) AS count FROM Deduction
+                              WHERE reason = 'missing_hours'
+                              AND status = 'pending'`),
+  
+        pool.request().query(`SELECT COUNT(*) AS count FROM Deduction
+                              WHERE reason = 'missing_days'
+                              AND status = 'pending'`),
+  
+        pool.request().query(`SELECT COUNT(*) AS count FROM Payroll
+                              WHERE MONTH(payment_date) = MONTH(GETDATE())
+                              AND YEAR(payment_date) = YEAR(GETDATE())`)
+      ]);
+  
+      res.json({
+        success: true,
+        data: {
+          pendingAnnual: queries[0].recordset[0].count,
+          pendingUnpaid: queries[1].recordset[0].count,
+          pendingComp: queries[2].recordset[0].count,
+          missingHours: queries[3].recordset[0].count,
+          missingDays: queries[4].recordset[0].count,
+          payrollEntries: queries[5].recordset[0].count,
+        }
+      });
+  
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: "Failed to load dashboard stats" });
+    }
+  };
+  
   
   
   
@@ -560,5 +610,6 @@ module.exports = {
   rejectCompensation,addMissingHoursDeduction,
   deductMissingDays,
   DeductionUnpaid,
-  generatePayroll
+  generatePayroll,
+  getHRStats
 };

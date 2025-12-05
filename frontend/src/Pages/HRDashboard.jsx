@@ -1,26 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HRSidebar from "../Components/HRSidebar";
+import axios from "axios";
 import {
   ClipboardCheck,
   FileCheck,
+  CalendarCheck,
   ClipboardX,
   ClipboardList,
   DollarSign,
-  CalendarCheck,
 } from "lucide-react";
 
 export default function HRDashboard() {
   const navigate = useNavigate();
+  const [stats, setStats] = useState(null);
 
-  const stats = {
-    pendingAnnual: 3,
-    pendingUnpaid: 1,
-    pendingComp: 2,
-    missingHours: 5,
-    missingDays: 1,
-    payrollEntries: 12,
-  };
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem("hrToken");
+
+        const res = await axios.get("http://localhost:3000/HR/dashboard/stats", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setStats(res.data.data);
+      } catch (err) {
+        console.error("Failed to load dashboard stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (!stats) {
+    return (
+      <div className="flex h-screen w-full">
+        <HRSidebar />
+        <div className="flex-1 flex justify-center items-center text-xl">
+          Loading dashboard...
+        </div>
+      </div>
+    );
+  }
 
   const cards = [
     {

@@ -15,7 +15,8 @@ const {
   addMissingHoursDeduction,
   deductMissingDays,
   DeductionUnpaid,
-  generatePayroll
+  generatePayroll,
+  getHRStats
 } = require("../controllers/Hr_Controller");
 
 const { verifyHRToken } = require("../middlewares/Hr_verify");
@@ -42,6 +43,8 @@ router.post("/deduct/missing-days/:empId", verifyHRToken, deductMissingDays);
 router.post("/deduction/unpaid", verifyHRToken, DeductionUnpaid);
 
 router.post("/payroll/generate", verifyHRToken, generatePayroll);
+router.get("/dashboard/stats", verifyHRToken, getHRStats);
+
 
 
 
