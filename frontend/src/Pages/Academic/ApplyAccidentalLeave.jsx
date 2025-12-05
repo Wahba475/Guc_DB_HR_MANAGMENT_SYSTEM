@@ -32,7 +32,6 @@ export default function AcademicLeaves() {
 
       <div className="p-10 flex flex-col items-center">
 
-        {/* HEADER */}
         <h1 className="text-3xl font-bold mb-6 text-emerald-800 flex items-center gap-2">
           <CalendarDays className="w-7 h-7 text-emerald-700" />
           My Leave Requests
@@ -40,12 +39,10 @@ export default function AcademicLeaves() {
 
         {error && <p className="text-red-600 mb-4">{error}</p>}
 
-        {/* NO LEAVES */}
         {leaves.length === 0 && (
           <p className="text-gray-600 mt-10">📭 No leave requests found.</p>
         )}
 
-        {/* LEAVE TABLE */}
         {leaves.length > 0 && (
           <div className="w-full max-w-4xl bg-white shadow-md rounded-xl p-6">
 
@@ -53,21 +50,32 @@ export default function AcademicLeaves() {
               <thead>
                 <tr className="border-b text-gray-600">
                   <th className="pb-3">Request ID</th>
-                  <th className="pb-3">Leave Type</th>
                   <th className="pb-3">Request Date</th>
+
+                  {/* NEW COLUMNS ADDED */}
+                  <th className="pb-3">Type</th>
+                  <th className="pb-3">Start Date</th>
+                  <th className="pb-3">End Date</th>
+
                   <th className="pb-3 text-center">Status</th>
                 </tr>
               </thead>
 
               <tbody>
                 {leaves.map((row) => {
-                  const date = row.date_of_request?.split("T")[0] || "—";
+                  const requestDate = row.date_of_request?.split("T")[0];
+                  const startDate = row.start_date?.split("T")[0];
+                  const endDate = row.end_date?.split("T")[0];
 
                   return (
                     <tr key={row.request_ID} className="border-b last:border-none">
                       <td className="py-3">{row.request_ID}</td>
-                      <td className="font-medium text-emerald-700">{row.leave_type}</td>
-                      <td>{date}</td>
+                      <td>{requestDate}</td>
+
+                      {/* NEW DATA COLUMNS */}
+                      <td className="text-emerald-700 font-semibold">{row.leave_type}</td>
+                      <td>{startDate}</td>
+                      <td>{endDate}</td>
 
                       <td className="text-center">
                         {row.final_approval_status === "Approved" ? (

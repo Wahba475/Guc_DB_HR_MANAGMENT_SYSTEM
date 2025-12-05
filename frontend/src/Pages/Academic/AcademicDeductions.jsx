@@ -80,11 +80,19 @@ export default function AcademicDeductions() {
                 {deductions.map((d) => (
                   <tr
                     key={d.deduction_ID}
-                    className="border-b last:border-none"
+                    className="border-b last:border-none hover:bg-gray-100 transition"
                   >
-                    <td className="py-3">{d.date?.split("T")[0]}</td>
-                    <td>{d.reason}</td>
-                    <td>{d.amount}</td>
+                    <td className="py-4 pr-6 text-gray-800">
+                      {d.date?.split("T")[0]}
+                    </td>
+
+                    <td className="py-4 pr-6 text-gray-700 font-medium capitalize">
+                      {d.reason || d.type}
+                    </td>
+
+                    <td className="py-4 text-emerald-700 font-semibold">
+                      {Number(d.amount).toFixed(2)}
+                    </td>
                   </tr>
                 ))}
               </tbody>

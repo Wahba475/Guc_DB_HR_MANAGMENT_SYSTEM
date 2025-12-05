@@ -16,7 +16,7 @@ export default function Landing() {
     {
       label: "HR",
       icon: UserCog,
-      path: "/hr-login",
+      path: "/HRLogin",
       color: "bg-blue-600 text-white",
       hoverColor: "hover:bg-blue-700",
     },

@@ -2,19 +2,15 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
-  BookOpen,
-  CalendarCheck,
-  FileText,
-  DollarSign,
+  ClipboardCheck,
   ClipboardList,
+  DollarSign,
   LogOut,
   ChevronDown,
-  GraduationCap,
-  CheckCircle,
-  ClipboardCheck
+  BriefcaseBusiness,
 } from "lucide-react";
 
-export default function AcademicSidebar() {
+export default function HRSidebar() {
   const [openSection, setOpenSection] = useState(null);
   const navigate = useNavigate();
 
@@ -23,97 +19,72 @@ export default function AcademicSidebar() {
   };
 
   const logout = () => {
-    localStorage.removeItem("academicToken");
+    // 🔴 IMPORTANT: clear ALL tokens
+    localStorage.removeItem("token");
+    localStorage.removeItem("hrToken");
     navigate("/");
   };
 
   const sections = [
     {
-      id: "performance",
-      label: "Performance",
-      icon: BookOpen,
-      links: [{ to: "/academic/performance", label: "My Performance" }],
-    },
-    {
-      id: "attendance",
-      label: "Attendance",
-      icon: CalendarCheck,
-      links: [{ to: "/academic/attendance", label: "My Attendance" }],
-    },
-    {
-      id: "leaves",
-      label: "Leaves",
-      icon: FileText,
+      id: "approvals",
+      label: "Leave Approvals",
+      icon: ClipboardCheck,
       links: [
-        { to: "/academic/leaves", label: "My Leaves" },
-        { to: "/academic/leaves/accidental", label: "Apply Accidental Leave" },
-        { to: "/academic/leaves/medical", label: "Apply Medical Leave" },
-        { to: "/academic/leaves/unpaid", label: "Apply Unpaid Leave" },
-        { to: "/academic/leaves/compensation", label: "Apply Compensation Leave" },
+        { to: "/hr/approve-annual-accidental", label: "Annual & Accidental" },
+        { to: "/hr/approve-unpaid", label: "Unpaid Leaves" },
+        { to: "/hr/approve-compensation", label: "Compensation Leaves" },
       ],
     },
     {
-      id: "approvals",
-      label: "Approvals",
-      icon: CheckCircle,
+      id: "deductions",
+      label: "Deductions",
+      icon: ClipboardList,
       links: [
-        { to: "/academic/annual-approvals", label: "Approve Annual Leaves" },
-        { to: "/academic/approvals/unpaid", label: "Approve Unpaid Leaves" },
-        { to: "/academic/evaluate", label: "Evaluate Employees" }
-
+        { to: "/hr/deductions/missing-hours", label: "Missing Hours" },
+        { to: "/hr/missing-days", label: "Missing Days" },
+        { to: "/hr/deduction/unpaid", label: "Unpaid Deduction" },
       ],
     },
     {
       id: "payroll",
       label: "Payroll",
       icon: DollarSign,
-      links: [{ to: "/academic/payroll", label: "Last Month Payroll" }],
-    },
-    {
-      id: "deductions",
-      label: "Deductions",
-      icon: ClipboardList,
-      links: [{ to: "/academic/deductions", label: "My Deductions" }],
+      links: [{ to: "/hr/payroll/generate", label: "Generate Payroll" }],
     },
   ];
 
   return (
-    <div className="h-screen w-64 bg-emerald-700 text-white flex flex-col border-r border-emerald-800 shadow-xl">
-
+    <div className="h-screen w-64 bg-blue-600 text-white flex flex-col border-r border-blue-700 shadow-xl">
       {/* HEADER */}
-      <div className="p-6 border-b border-emerald-800 flex items-center gap-3">
-        <GraduationCap className="w-6 h-6" />
-        <h1 className="text-xl font-semibold">Academic Portal</h1>
+      <div className="p-6 border-b border-blue-700 flex items-center gap-3">
+        <BriefcaseBusiness className="w-6 h-6 text-blue-100" />
+        <h1 className="text-xl font-semibold">HR Portal</h1>
       </div>
 
       {/* MAIN NAV */}
       <nav className="flex-1 overflow-y-auto p-4">
-
-        {/* Dashboard Button */}
         <NavLink
-          to="/academic-dashboard"
+          to="/hr-dashboard"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-3 rounded-lg mb-3 transition 
-            ${isActive ? "bg-emerald-800" : "hover:bg-emerald-900/40 text-emerald-100"}`
+            ${isActive ? "bg-blue-700" : "hover:bg-blue-700/40 text-blue-100"}`
           }
         >
           <LayoutDashboard className="w-5 h-5" />
           Dashboard
         </NavLink>
 
-        {/* COLLAPSIBLE SECTIONS */}
         {sections.map((section) => {
           const Icon = section.icon;
           const open = openSection === section.id;
 
           return (
             <div key={section.id} className="mb-3">
-
-              {/* Section Header */}
               <button
                 onClick={() => toggleSection(section.id)}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition
-                ${open ? "bg-emerald-800" : "hover:bg-emerald-900/40"}`}
+                ${open ? "bg-blue-700" : "hover:bg-blue-700/40"}`}
               >
                 <div className="flex items-center gap-3">
                   <Icon className="w-5 h-5" />
@@ -121,12 +92,12 @@ export default function AcademicSidebar() {
                 </div>
 
                 <ChevronDown
-                  className={`w-4 h-4 transition-transform 
-                  ${open ? "rotate-180" : "rotate-0"}`}
+                  className={`w-4 h-4 transition-transform ${
+                    open ? "rotate-180" : ""
+                  }`}
                 />
               </button>
 
-              {/* DROPDOWN LINKS */}
               {open && (
                 <div className="pl-6 mt-2 space-y-2">
                   {section.links.map((link) => (
@@ -137,8 +108,8 @@ export default function AcademicSidebar() {
                         `block px-3 py-2 rounded-lg text-sm transition 
                         ${
                           isActive
-                            ? "bg-emerald-800 text-white"
-                            : "text-emerald-100 hover:bg-emerald-900/40 hover:text-white"
+                            ? "bg-blue-700 text-white"
+                            : "text-blue-100 hover:bg-blue-700/40"
                         }`
                       }
                     >
@@ -147,14 +118,13 @@ export default function AcademicSidebar() {
                   ))}
                 </div>
               )}
-
             </div>
           );
         })}
       </nav>
 
       {/* LOGOUT */}
-      <div className="p-4 border-t border-emerald-800">
+      <div className="p-4 border-t border-blue-700">
         <button
           onClick={logout}
           className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg

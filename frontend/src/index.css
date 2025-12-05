@@ -2,3 +2,26 @@
 body {
   font-family: "Oswald", sans-serif;
 }
+
+.Toastify__toast {
+  font-family: "Oswald", sans-serif ;
+  font-size: 16px ;
+}
+/* ================================
+   FORCE TOASTIFY TO USE OSWALD FONT
+   ================================ */
+   .Toastify__toast,
+   .Toastify__toast-body,
+   .Toastify__toast-body > div:last-child,
+   .Toastify__toast-container,
+   .Toastify__close-button,
+   .Toastify__progress-bar {
+     font-family: "Oswald", sans-serif !important;
+   }
+   
+   /* Fix toast title alignment */
+   .Toastify__toast-body {
+     display: flex;
+     align-items: center;
+   }
+   
